@@ -1,86 +1,77 @@
-﻿namespace Unidad_2_practica_1
+﻿using System;
+using System.Collections.Generic;
+
+class Program
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    namespace RegistroUsuariosApp
+    static void Main()
     {
-        // Se usa una estructura para agrupar los datos, cambiando el estilo de listas paralelas
-        struct Persona
+        int cantidad = 0;
+
+        // Pedir cuántas personas
+        while (true)
         {
-            public string Nombre;
-            public int Edad;
+            Console.Write("¿Cuántas personas va a registrar?: ");
+            string entrada = Console.ReadLine();
+
+            try
+            {
+                cantidad = int.Parse(entrada);
+
+                if (cantidad > 0)
+                    break;
+                else
+                    Console.WriteLine("Debe ser mayor a 0.\n");
+            }
+            catch
+            {
+                Console.WriteLine("Solo números.\n");
+            }
         }
 
-        class Gestionador
+        List<string> nombres = new List<string>();
+        List<int> edades = new List<int>();
+
+        // Registrar personas
+        for (int i = 0; i < cantidad; i++)
         {
-            static void Main(string[] args)
+            Console.Write("\nNombre de la persona #" + (i + 1) + ": ");
+            nombres.Add(Console.ReadLine());
+
+            while (true)
             {
-                bool continuar = true;
-
-                while (continuar)
+                Console.Write("Edad: ");
+                try
                 {
-                    Console.Clear();
-                    Console.WriteLine("===== SISTEMA DE REGISTRO =====");
-
-                    int cantidad = LeerEntero("¿Cuántos registros desea ingresar?: ", 1);
-                    var listaPersonas = new List<Persona>();
-
-                    for (int i = 0; i < cantidad; i++)
-                    {
-                        Console.WriteLine($"\nRegistro #{i + 1}");
-                        Console.Write("Nombre completo: ");
-                        string nombreInput = Console.ReadLine();
-
-                        int edadInput = LeerEntero($"Ingrese la edad de {nombreInput}: ", 0);
-
-                        listaPersonas.Add(new Persona { Nombre = nombreInput, Edad = edadInput });
-                    }
-
-                    // Filtrado de datos usando una lógica de separación clara
-                    MostrarResultados(listaPersonas);
-
-                    Console.Write("\n¿Desea realizar un nuevo análisis? (s/n): ");
-                    string input = Console.ReadLine().ToLower();
-                    continuar = (input == "s" || input == "si");
+                    edades.Add(int.Parse(Console.ReadLine()));
+                    break;
                 }
-            }
-
-            // Método auxiliar para limpiar el Main y manejar errores de entrada
-            static int LeerEntero(string mensaje, int min)
-            {
-                int valor;
-                Console.Write(mensaje);
-                while (!int.TryParse(Console.ReadLine(), out valor) || valor < min)
+                catch
                 {
-                    Console.WriteLine($"ERROR: Por favor ingrese un número válido (mínimo {min}).");
-                    Console.Write(mensaje);
-                }
-                return valor;
-            }
-
-            static void ShowHeader(string titulo)
-            {
-                Console.WriteLine($"\n>> {titulo.ToUpper()} <<");
-            }
-
-            static void MostrarResultados(List<Persona> personas)
-            {
-                ShowHeader("Listado de Adultos");
-                foreach (var p in personas)
-                {
-                    if (p.Edad >= 18)
-                        Console.WriteLine($"- {p.Nombre} ({p.Edad} años)");
-                }
-
-                ShowHeader("Listado de Menores");
-                foreach (var p in personas)
-                {
-                    if (p.Edad < 18)
-                        Console.WriteLine($"- {p.Nombre} ({p.Edad} años)");
+                    Console.WriteLine("Edad incorrecta.");
                 }
             }
         }
-    }|+
+
+        Console.WriteLine("\n--- TODAS LAS PERSONAS ---");
+        for (int i = 0; i < cantidad; i++)
+        {
+            Console.WriteLine(nombres[i] + " - " + edades[i] + " años");
+        }
+
+        Console.WriteLine("\n--- MAYORES DE EDAD ---");
+        for (int i = 0; i < cantidad; i++)
+        {
+            if (edades[i] >= 18)
+                Console.WriteLine(nombres[i]);
+        }
+
+        Console.WriteLine("\n--- MENORES DE EDAD ---");
+        for (int i = 0; i < cantidad; i++)
+        {
+            if (edades[i] < 18)
+                Console.WriteLine(nombres[i]);
+        }
+    }
+}
+
 
